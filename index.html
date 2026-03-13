@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Benchwarmers — Football Training App</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,400&family=Barlow:ital,wght@0,300;0,400;0,500;0,600;1,400&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <!-- ══════════════════════════════════
+       ONBOARDING
+  ══════════════════════════════════ -->
+  <div id="ob-screen" class="ob-screen">
+    <div class="ob-grid-bg"></div>
+    <div class="ob-wrap">
+      <div class="ob-eyebrow">FOOTBALL TRAINING APP</div>
+      <h1 class="ob-title">BENCH<span class="cg">WARM</span>ERS</h1>
+      <p class="ob-tagline">From Bench to Beast.</p>
+      <p class="ob-desc">Every legend started somewhere uncomfortable. Yours starts here.</p>
+
+      <div class="ob-card">
+        <label class="lbl">YOUR NAME</label>
+        <input id="ob-name" class="ob-inp" type="text" placeholder="e.g. Cristiano Ronaldo " maxlength="22" autocomplete="off" />
+
+        <label class="lbl mt">POSITION</label>
+        <div class="ob-pos-row" id="ob-pos-row">
+          <button class="ob-pos" data-pos="goalkeeper">🧤<span>GK</span></button>
+          <button class="ob-pos" data-pos="defender">🛡️<span>DEF</span></button>
+          <button class="ob-pos" data-pos="midfielder">⚙️<span>MID</span></button>
+          <button class="ob-pos" data-pos="winger">⚡<span>WIN</span></button>
+          <button class="ob-pos" data-pos="striker">🔥<span>ST</span></button>
+        </div>
+
+        <label class="lbl mt">PLAY STYLE</label>
+        <div class="ob-style-grid" id="ob-style-grid">
+          <button class="ob-style" data-style="playmaker">🧠<span>Playmaker</span></button>
+          <button class="ob-style" data-style="speedster">💨<span>Speedster</span></button>
+          <button class="ob-style" data-style="targetman">🎯<span>Target Man</span></button>
+          <button class="ob-style" data-style="defensive">🏰<span>Defensive Wall</span></button>
+          <button class="ob-style" data-style="box2box">🔄<span>Box-to-Box</span></button>
+          <button class="ob-style" data-style="dribbler">🌀<span>Dribble Artist</span></button>
+        </div>
+
+        <button id="ob-btn" class="ob-btn" disabled>GET OFF THE BENCH →</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════
+       APP SHELL
+  ══════════════════════════════════ -->
+  <div id="app" class="app hidden">
+
+    <!-- TOPBAR -->
+    <header class="topbar" id="topbar">
+      <div class="tb-inner">
+        <div class="tb-brand">⚽ <span>BENCH<span class="cg">WARMERS</span></span></div>
+        <nav class="tb-nav" id="tb-nav">
+          <button class="tn active" data-sec="home">Home</button>
+          <button class="tn" data-sec="drills">Drills</button>
+          <button class="tn" data-sec="plan">Plan</button>
+          <button class="tn" data-sec="tactics">Tactics</button>
+          <button class="tn" data-sec="intel">Pro Intel</button>
+          <button class="tn" data-sec="recovery">Recovery</button>
+          <button class="tn" data-sec="progress">Progress</button>
+        </nav>
+        <div class="tb-right">
+          <div class="xp-pill" id="xp-pill">⚡ <span id="xp-val">0</span> XP</div>
+          <div class="rank-orb" id="rank-orb" title="Current rank">🪑</div>
+          <button class="hbg" id="hbg-btn" aria-label="Menu"><span></span><span></span><span></span></button>
+        </div>
+      </div>
+      <div class="mob-drawer" id="mob-drawer">
+        <button class="mtn active" data-sec="home">🏠 Home</button>
+        <button class="mtn" data-sec="drills">⚽ Drills</button>
+        <button class="mtn" data-sec="plan">📅 Plan</button>
+        <button class="mtn" data-sec="tactics">⚔️ Tactics</button>
+        <button class="mtn" data-sec="intel">🌟 Pro Intel</button>
+        <button class="mtn" data-sec="recovery">🩺 Recovery</button>
+        <button class="mtn" data-sec="progress">📊 Progress</button>
+      </div>
+    </header>
+
+    <main class="main-wrap">
+
+      <!-- ── HOME ── -->
+      <section id="sec-home" class="sec active">
+
+        <!-- Motivation banner -->
+        <div class="motiv-banner" id="motiv-banner">
+          <span class="motiv-ico">💬</span>
+          <span class="motiv-txt" id="motiv-txt">Loading your daily dose…</span>
+          <button class="motiv-refresh" id="motiv-refresh" title="New quote">↺</button>
+        </div>
+
+        <!-- Hero -->
+        <div class="hero" id="home-hero">
+          <div class="hero-bg"></div>
+          <div class="hero-body">
+            <div class="hero-top-row">
+              <span class="rank-pill" id="h-rank-pill">🪑 BENCHWARMER</span>
+              <span class="streak-pill" id="h-streak-pill">🔥 0 day streak</span>
+            </div>
+            <p class="hero-greet">Training Day,</p>
+            <h1 class="hero-name" id="h-name">Player</h1>
+            <div class="hero-tags">
+              <span class="htag" id="h-pos-tag">⚙️ Midfielder</span>
+              <span class="htag htag-amber" id="h-style-tag">🧠 Playmaker</span>
+            </div>
+            <div class="hero-stats">
+              <div class="hs"><span class="hs-n" id="hs-sess">0</span><span class="hs-l">Sessions</span></div>
+              <div class="hs-sep"></div>
+              <div class="hs"><span class="hs-n" id="hs-drills">0</span><span class="hs-l">Drills</span></div>
+              <div class="hs-sep"></div>
+              <div class="hs"><span class="hs-n" id="hs-xp">0</span><span class="hs-l">XP</span></div>
+            </div>
+            <button class="hero-cta" id="h-start-btn">START TODAY'S SESSION →</button>
+          </div>
+          <div class="hero-glow"></div>
+        </div>
+
+        <!-- Today session -->
+        <div class="blk">
+          <div class="blk-hd"><h3 class="blk-t">TODAY'S SESSION</h3><button class="ghost-btn" id="regen-today">↺ Regenerate</button></div>
+          <div id="today-sess"></div>
+        </div>
+
+        <!-- Play style display -->
+        <div class="blk">
+          <div class="blk-hd"><h3 class="blk-t">YOUR PLAY STYLE</h3><button class="ghost-btn" id="change-style-btn">Change Style</button></div>
+          <div id="playstyle-card"></div>
+        </div>
+
+        <!-- Position grid -->
+        <div class="blk">
+          <div class="blk-hd"><h3 class="blk-t">POSITION</h3><span class="blk-sub">Tap to switch</span></div>
+          <div class="pos-grid" id="pos-grid"></div>
+        </div>
+
+        <!-- Streak -->
+        <div class="blk">
+          <div class="blk-hd"><h3 class="blk-t">WEEKLY STREAK</h3><span class="streak-lbl" id="streak-lbl">0/7</span></div>
+          <div class="streak-row" id="streak-row"></div>
+        </div>
+
+      </section>
+
+      <!-- ── DRILLS ── -->
+      <section id="sec-drills" class="sec">
+        <div class="ph"><h2 class="ph-t">DRILL <span class="cg">VAULT</span></h2><p class="ph-s">15 drills. Your play style highlights the best matches.</p></div>
+
+        <div class="filter-bar">
+          <div class="fs" id="cat-fs">
+            <button class="fp on" data-cat="all">All</button>
+            <button class="fp" data-cat="technical">Technical</button>
+            <button class="fp" data-cat="fitness">Fitness</button>
+            <button class="fp" data-cat="tactical">Tactical</button>
+          </div>
+          <div class="fs" id="diff-fs">
+            <button class="fp on" data-diff="all">All Levels</button>
+            <button class="fp" data-diff="beginner">Beginner</button>
+            <button class="fp" data-diff="intermediate">Intermediate</button>
+            <button class="fp" data-diff="advanced">Advanced</button>
+          </div>
+          <input id="d-search" class="d-search" type="text" placeholder="🔍  Search…" />
+        </div>
+        <div class="drill-res-row"><span id="d-count">Showing all 15 drills</span><button class="pos-toggle" id="pos-toggle">My position only</button></div>
+        <div class="drill-grid" id="drill-grid"></div>
+      </section>
+
+      <!-- ── PLAN ── -->
+      <section id="sec-plan" class="sec">
+        <div class="ph"><h2 class="ph-t">TRAINING <span class="cg">PLAN</span></h2><p class="ph-s">Position + play style adapted weekly programme.</p></div>
+        <div class="week-strip" id="week-strip"></div>
+        <div class="plan-acts"><button class="outline-btn" id="regen-plan">↺ New Plan</button><span class="pos-badge" id="pos-badge-plan">Midfielder</span></div>
+        <div class="day-plan" id="day-plan"></div>
+        <div class="blk mt2"><div class="blk-hd"><h3 class="blk-t">FULL WEEK</h3></div><div class="wov" id="wov"></div></div>
+      </section>
+
+      <!-- ── TACTICS ── -->
+      <section id="sec-tactics" class="sec">
+        <div class="ph"><h2 class="ph-t">TACTICS &amp; <span class="cg">FORMATIONS</span></h2><p class="ph-s">Understand the game beyond the ball at your feet.</p></div>
+
+        <div class="blk-hd mb1"><h3 class="blk-t">FORMATIONS</h3></div>
+        <div class="formation-grid" id="formation-grid"></div>
+
+        <div class="blk-hd mb1 mt2"><h3 class="blk-t">MATCH TACTICS</h3></div>
+        <div class="tactic-grid" id="tactic-grid"></div>
+      </section>
+
+      <!-- ── PRO INTEL ── -->
+      <section id="sec-intel" class="sec">
+        <div class="ph"><h2 class="ph-t">PRO <span class="cg">INTEL</span></h2><p class="ph-s">Compare your attributes. Train like the greats.</p></div>
+
+        <div class="blk-hd mb1"><h3 class="blk-t">ATTRIBUTE COMPARISON</h3></div>
+        <div class="compare-wrap" id="compare-wrap"></div>
+
+        <div class="blk-hd mb1 mt2"><h3 class="blk-t">PLAYER TRAINING REFERENCES</h3></div>
+        <div class="pro-grid" id="pro-grid"></div>
+      </section>
+
+      <!-- ── RECOVERY ── -->
+      <section id="sec-recovery" class="sec">
+        <div class="ph"><h2 class="ph-t">RECOVERY &amp; <span class="cg">PREVENTION</span></h2><p class="ph-s">The best players are the ones who stay available.</p></div>
+        <div class="recovery-grid" id="recovery-grid"></div>
+      </section>
+
+      <!-- ── PROGRESS ── -->
+      <section id="sec-progress" class="sec">
+        <div class="ph"><h2 class="ph-t">YOUR <span class="cg">PROGRESS</span></h2><p class="ph-s">Numbers. Rankings. Bragging rights (when you earn them).</p></div>
+
+        <div class="big-stats" id="big-stats"></div>
+
+        <div class="blk" id="xp-blk"></div>
+
+        <div class="blk">
+          <div class="blk-hd"><h3 class="blk-t">RANK LADDER</h3></div>
+          <div class="rank-ladder" id="rank-ladder"></div>
+        </div>
+
+        <div class="blk">
+          <div class="blk-hd"><h3 class="blk-t">SKILL BARS</h3></div>
+          <div class="skill-bars" id="skill-bars"></div>
+        </div>
+
+        <div class="blk">
+          <div class="blk-hd"><h3 class="blk-t">14-DAY ACTIVITY</h3></div>
+          <div class="chart-wrap"><canvas id="act-canvas" height="130"></canvas></div>
+        </div>
+
+        <div class="blk">
+          <div class="blk-hd"><h3 class="blk-t">ACHIEVEMENTS</h3></div>
+          <div class="ach-grid" id="ach-grid"></div>
+        </div>
+      </section>
+
+    </main>
+  </div><!-- /app -->
+
+  <!-- DRILL MODAL -->
+  <div class="modal-bg" id="modal-bg">
+    <div class="modal" id="modal">
+      <button class="modal-x" id="modal-x">✕</button>
+      <div id="modal-inner"></div>
+    </div>
+  </div>
+
+  <!-- PLAY STYLE SELECTOR MODAL -->
+  <div class="modal-bg" id="style-modal-bg">
+    <div class="modal" id="style-modal">
+      <button class="modal-x" id="style-modal-x">✕</button>
+      <div class="style-modal-inner">
+        <h2 class="modal-title">CHANGE PLAY STYLE</h2>
+        <p class="modal-sub">Your play style shapes your drill recommendations.</p>
+        <div class="style-pick-grid" id="style-pick-grid"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- TOAST -->
+  <div class="toast" id="toast"><span id="toast-ico">⚡</span><span id="toast-msg">XP earned!</span></div>
+
+  <script src="app.js"></script>
+</body>
+</html>
