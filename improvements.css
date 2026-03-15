@@ -1,0 +1,565 @@
+/* ============================================================
+   BENCHWARMERS — UI IMPROVEMENT PATCH
+   File: improvements.css
+   Instructions: Add <link rel="stylesheet" href="improvements.css">
+   AFTER your existing stylesheet link in <head>.
+   Nothing here overrides layout — only enhances visuals.
+   ============================================================ */
+
+/* ----------------------------------------------------------
+   0. CSS CUSTOM PROPERTIES (safe additions)
+   ---------------------------------------------------------- */
+:root {
+  --bw-transition-fast:   150ms cubic-bezier(0.4, 0, 0.2, 1);
+  --bw-transition-base:   250ms cubic-bezier(0.4, 0, 0.2, 1);
+  --bw-transition-slow:   400ms cubic-bezier(0.4, 0, 0.2, 1);
+  --bw-transition-spring: 350ms cubic-bezier(0.34, 1.56, 0.64, 1);
+  --bw-shadow-card:       0 2px 8px rgba(0,0,0,0.35);
+  --bw-shadow-card-hover: 0 12px 32px rgba(0,0,0,0.55), 0 2px 8px rgba(0,0,0,0.3);
+  --bw-shadow-btn:        0 4px 15px rgba(0,0,0,0.3);
+  --bw-shadow-btn-glow:   0 0 20px rgba(255,255,255,0.12), 0 6px 20px rgba(0,0,0,0.4);
+  --bw-blur-nav:          saturate(1.8) blur(16px);
+  --bw-focus-ring:        0 0 0 3px rgba(99,179,237,0.6);
+}
+
+/* ----------------------------------------------------------
+   1. SCROLL PROGRESS BAR
+   ---------------------------------------------------------- */
+#bw-scroll-progress {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 0%;
+  height: 3px;
+  background: linear-gradient(90deg, #38bdf8, #818cf8, #f472b6);
+  z-index: 9999;
+  border-radius: 0 2px 2px 0;
+  transition: width 80ms linear;
+  pointer-events: none;
+  will-change: width;
+}
+
+/* ----------------------------------------------------------
+   2. NAVBAR — STICKY BLUR + SCROLL SHADOW
+   ---------------------------------------------------------- */
+nav,
+.navbar,
+header nav,
+#navbar,
+[class*="nav-"] {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  transition:
+    background var(--bw-transition-base),
+    backdrop-filter var(--bw-transition-base),
+    box-shadow var(--bw-transition-base);
+  will-change: background, backdrop-filter;
+}
+
+/* Class toggled by JS when page is scrolled */
+nav.bw-scrolled,
+.navbar.bw-scrolled,
+header nav.bw-scrolled,
+#navbar.bw-scrolled {
+  backdrop-filter: var(--bw-blur-nav);
+  -webkit-backdrop-filter: var(--bw-blur-nav);
+  box-shadow: 0 1px 0 rgba(255,255,255,0.06), 0 4px 24px rgba(0,0,0,0.4);
+  background: rgba(0, 0, 0, 0.72) !important;
+}
+
+/* ----------------------------------------------------------
+   3. MOBILE DRAWER — SMOOTHER ANIMATION
+   ---------------------------------------------------------- */
+/* The drawer itself — assume it has a class like .drawer, .mobile-menu,
+   .nav-drawer, or similar. JS will also add .bw-drawer to it. */
+.bw-drawer,
+[class*="drawer"],
+[class*="mobile-menu"],
+[id*="drawer"],
+[id*="mobile-nav"] {
+  transition:
+    transform var(--bw-transition-slow) cubic-bezier(0.32, 0.72, 0, 1),
+    opacity var(--bw-transition-slow) ease,
+    visibility var(--bw-transition-slow) ease !important;
+}
+
+/* Drawer overlay backdrop */
+.bw-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0);
+  z-index: 98;
+  pointer-events: none;
+  transition: background var(--bw-transition-slow) ease;
+}
+.bw-overlay.bw-overlay--visible {
+  background: rgba(0,0,0,0.55);
+  pointer-events: all;
+  backdrop-filter: blur(2px);
+  -webkit-backdrop-filter: blur(2px);
+}
+
+/* ----------------------------------------------------------
+   4. SCROLL REVEAL — BASE STATE
+   JS adds .bw-revealed once IntersectionObserver fires
+   ---------------------------------------------------------- */
+.bw-reveal {
+  opacity: 0;
+  transform: translateY(24px);
+  transition:
+    opacity var(--bw-transition-slow) ease,
+    transform var(--bw-transition-slow) cubic-bezier(0.22, 1, 0.36, 1);
+}
+.bw-reveal.bw-revealed {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Staggered children */
+.bw-reveal-stagger > * {
+  opacity: 0;
+  transform: translateY(20px);
+  transition:
+    opacity var(--bw-transition-slow) ease,
+    transform var(--bw-transition-slow) cubic-bezier(0.22, 1, 0.36, 1);
+}
+.bw-reveal-stagger.bw-revealed > *:nth-child(1)  { opacity: 1; transform: none; transition-delay:  40ms; }
+.bw-reveal-stagger.bw-revealed > *:nth-child(2)  { opacity: 1; transform: none; transition-delay:  90ms; }
+.bw-reveal-stagger.bw-revealed > *:nth-child(3)  { opacity: 1; transform: none; transition-delay: 140ms; }
+.bw-reveal-stagger.bw-revealed > *:nth-child(4)  { opacity: 1; transform: none; transition-delay: 190ms; }
+.bw-reveal-stagger.bw-revealed > *:nth-child(5)  { opacity: 1; transform: none; transition-delay: 240ms; }
+.bw-reveal-stagger.bw-revealed > *:nth-child(6)  { opacity: 1; transform: none; transition-delay: 290ms; }
+.bw-reveal-stagger.bw-revealed > *:nth-child(n+7){ opacity: 1; transform: none; transition-delay: 340ms; }
+
+/* ----------------------------------------------------------
+   5. FEATURE CARDS — HOVER ELEVATION + MICRO-ANIMATION
+   ---------------------------------------------------------- */
+/* Target any card-like element generically */
+[class*="card"],
+[class*="Card"],
+.drill-card,
+.feature-card,
+.stat-card,
+.tactic-card,
+.recovery-card,
+.achievement-card {
+  transition:
+    transform var(--bw-transition-spring),
+    box-shadow var(--bw-transition-base),
+    border-color var(--bw-transition-base) !important;
+  cursor: default;
+  will-change: transform;
+}
+
+[class*="card"]:hover,
+[class*="Card"]:hover,
+.drill-card:hover,
+.feature-card:hover,
+.stat-card:hover,
+.tactic-card:hover,
+.recovery-card:hover,
+.achievement-card:hover {
+  transform: translateY(-4px) scale(1.012);
+  box-shadow: var(--bw-shadow-card-hover) !important;
+  border-color: rgba(255,255,255,0.18) !important;
+}
+
+/* Subtle inner highlight on card hover */
+[class*="card"]::before,
+.drill-card::before,
+.feature-card::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: linear-gradient(135deg, rgba(255,255,255,0.04) 0%, transparent 60%);
+  opacity: 0;
+  transition: opacity var(--bw-transition-base) ease;
+  pointer-events: none;
+}
+[class*="card"]:hover::before,
+.drill-card:hover::before,
+.feature-card:hover::before {
+  opacity: 1;
+}
+/* Ensure cards with relative positioning exist */
+[class*="card"],
+.drill-card,
+.feature-card {
+  position: relative;
+}
+
+/* ----------------------------------------------------------
+   6. BUTTONS — LIFT, GLOW, SMOOTHER TIMING
+   ---------------------------------------------------------- */
+button,
+[class*="btn"],
+[class*="button"],
+input[type="submit"],
+input[type="button"] {
+  transition:
+    transform var(--bw-transition-spring),
+    box-shadow var(--bw-transition-base),
+    background var(--bw-transition-base),
+    opacity var(--bw-transition-fast) !important;
+  will-change: transform, box-shadow;
+}
+
+button:not(:disabled):hover,
+[class*="btn"]:not(:disabled):hover,
+[class*="button"]:not(:disabled):hover {
+  transform: translateY(-2px);
+  box-shadow: var(--bw-shadow-btn-glow) !important;
+}
+
+button:not(:disabled):active,
+[class*="btn"]:not(:disabled):active,
+[class*="button"]:not(:disabled):active {
+  transform: translateY(0) scale(0.97);
+  transition-duration: 80ms !important;
+}
+
+/* Primary CTA buttons — extra glow */
+[class*="cta"],
+[class*="primary"],
+[class*="start"],
+.btn-primary {
+  position: relative;
+  overflow: hidden;
+}
+[class*="cta"]::after,
+[class*="primary"]::after,
+.btn-primary::after {
+  content: "";
+  position: absolute;
+  inset: -2px;
+  border-radius: inherit;
+  background: conic-gradient(from 0deg, transparent 30%, rgba(255,255,255,0.15) 50%, transparent 70%);
+  opacity: 0;
+  transition: opacity var(--bw-transition-slow) ease;
+  pointer-events: none;
+}
+[class*="cta"]:hover::after,
+[class*="primary"]:hover::after,
+.btn-primary:hover::after {
+  opacity: 1;
+}
+
+/* Loading spinner for drill generator button */
+button.bw-loading,
+[class*="btn"].bw-loading {
+  pointer-events: none;
+  opacity: 0.75;
+  cursor: wait;
+}
+button.bw-loading .bw-btn-text {
+  opacity: 0;
+}
+button.bw-loading::before {
+  content: "";
+  position: absolute;
+  width: 16px;
+  height: 16px;
+  border: 2px solid rgba(255,255,255,0.3);
+  border-top-color: #fff;
+  border-radius: 50%;
+  animation: bw-spin 0.7s linear infinite;
+  top: 50%;
+  left: 50%;
+  margin: -8px 0 0 -8px;
+}
+@keyframes bw-spin {
+  to { transform: rotate(360deg); }
+}
+
+/* ----------------------------------------------------------
+   7. STAT COUNTERS — NUMBER ANIMATION
+   [data-count] elements animated by JS
+   ---------------------------------------------------------- */
+[data-bw-count] {
+  display: inline-block;
+  font-variant-numeric: tabular-nums;
+  transition: color var(--bw-transition-base);
+}
+
+/* Progress bars — animated fill */
+[class*="progress"],
+[class*="Progress"],
+[role="progressbar"] {
+  overflow: hidden;
+}
+[class*="progress"] > *,
+[class*="progress-fill"],
+[class*="Progress"] > * {
+  transform-origin: left center;
+  transition: transform 1.2s cubic-bezier(0.22, 1, 0.36, 1) !important;
+}
+
+/* Skill bar animated fill */
+.bw-bar-fill {
+  transform: scaleX(0);
+  transform-origin: left;
+}
+.bw-bar-fill.bw-revealed {
+  transform: scaleX(1);
+}
+
+/* ----------------------------------------------------------
+   8. DRILL GENERATOR — TRANSITION POLISH
+   ---------------------------------------------------------- */
+/* The drill result area — smooth in/out */
+[class*="drill-result"],
+[class*="drillResult"],
+#drill-output,
+.generated-drill {
+  transition:
+    opacity var(--bw-transition-base) ease,
+    transform var(--bw-transition-base) cubic-bezier(0.22, 1, 0.36, 1) !important;
+}
+
+.bw-drill-generating {
+  opacity: 0.4;
+  transform: scale(0.99);
+  pointer-events: none;
+}
+.bw-drill-ready {
+  opacity: 1;
+  transform: scale(1);
+}
+
+/* Regenerate button spin animation */
+button.bw-spinning [class*="icon"],
+button.bw-spinning .refresh-icon,
+button.bw-spinning svg {
+  animation: bw-spin 0.5s ease-in-out;
+}
+
+/* ----------------------------------------------------------
+   9. FORMATION / TACTICS HOVER
+   ---------------------------------------------------------- */
+[class*="formation"],
+[class*="Formation"] {
+  transition:
+    transform var(--bw-transition-spring),
+    box-shadow var(--bw-transition-base) !important;
+}
+[class*="formation"]:hover,
+[class*="Formation"]:hover {
+  transform: translateY(-3px) scale(1.015);
+}
+
+/* ----------------------------------------------------------
+   10. ACCESSIBILITY — FOCUS RINGS
+   Replace browser default with branded ring
+   ---------------------------------------------------------- */
+:focus-visible {
+  outline: none !important;
+  box-shadow: var(--bw-focus-ring) !important;
+  border-radius: 4px;
+}
+
+/* Skip to content link (injected by JS) */
+.bw-skip-link {
+  position: fixed;
+  top: -100px;
+  left: 1rem;
+  z-index: 10000;
+  padding: 0.5rem 1rem;
+  background: #38bdf8;
+  color: #000;
+  font-weight: 700;
+  border-radius: 0 0 8px 8px;
+  text-decoration: none;
+  font-size: 0.875rem;
+  transition: top var(--bw-transition-fast) ease;
+}
+.bw-skip-link:focus {
+  top: 0;
+  box-shadow: none;
+  outline: 3px solid #f472b6;
+  outline-offset: 2px;
+}
+
+/* ----------------------------------------------------------
+   11. SMOOTH ANCHOR SCROLL
+   html[style="scroll-behavior:smooth"] is set by JS
+   ---------------------------------------------------------- */
+html.bw-smooth-scroll {
+  scroll-behavior: smooth;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html.bw-smooth-scroll { scroll-behavior: auto; }
+  .bw-reveal,
+  .bw-reveal-stagger > * {
+    opacity: 1 !important;
+    transform: none !important;
+    transition: none !important;
+  }
+  [class*="card"]:hover,
+  button:hover,
+  [class*="btn"]:hover {
+    transform: none !important;
+  }
+  button.bw-loading::before {
+    animation: none !important;
+  }
+}
+
+/* ----------------------------------------------------------
+   12. TESTIMONIAL CARDS — SUBTLE TILT
+   ---------------------------------------------------------- */
+[class*="testimonial"],
+[class*="Testimonial"] {
+  transition:
+    transform var(--bw-transition-spring),
+    box-shadow var(--bw-transition-base) !important;
+}
+[class*="testimonial"]:hover,
+[class*="Testimonial"]:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 16px 40px rgba(0,0,0,0.5) !important;
+}
+
+/* ----------------------------------------------------------
+   13. MOBILE RESPONSIVENESS POLISH
+   ---------------------------------------------------------- */
+@media (max-width: 640px) {
+  /* Prevent card transform on touch — avoids sticky hover */
+  [class*="card"]:hover,
+  .drill-card:hover,
+  .feature-card:hover {
+    transform: none;
+  }
+  /* Larger tap targets */
+  button,
+  [class*="btn"],
+  a[class*="nav"] {
+    min-height: 44px;
+    min-width: 44px;
+  }
+}
+
+/* ----------------------------------------------------------
+   14. STATS SECTION — ANIMATED COUNTER HIGHLIGHT
+   ---------------------------------------------------------- */
+[data-bw-count].bw-counting {
+  animation: bw-count-pulse 0.15s ease-out;
+}
+@keyframes bw-count-pulse {
+  0%   { transform: scale(1); }
+  50%  { transform: scale(1.08); }
+  100% { transform: scale(1); }
+}
+
+/* ----------------------------------------------------------
+   15. FONT LOADING — PREVENT LAYOUT SHIFT
+   ---------------------------------------------------------- */
+@font-face {
+  font-display: swap; /* applied via font-display best practice */
+}
+
+/* Reduce CLS on icon/emoji spans */
+[class*="icon"],
+[class*="emoji"] {
+  display: inline-block;
+  min-width: 1em;
+  min-height: 1em;
+}
+
+/* ----------------------------------------------------------
+   16. GENERAL POLISH MICRO-DETAILS
+   ---------------------------------------------------------- */
+/* Smooth image load */
+img {
+  loading: lazy;           /* attr, but also CSS companion */
+  transition: opacity 0.3s ease;
+}
+img.lazyload {
+  opacity: 0;
+}
+img.lazyloaded {
+  opacity: 1;
+}
+
+/* Better text rendering */
+body {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
+
+/* Selection highlight */
+::selection {
+  background: rgba(56,189,248,0.35);
+  color: inherit;
+}
+
+/* Scrollbar polish (WebKit) */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: rgba(255,255,255,0.04);
+}
+::-webkit-scrollbar-thumb {
+  background: rgba(255,255,255,0.2);
+  border-radius: 3px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(255,255,255,0.35);
+}
+
+/* XP notification toast animation */
+[class*="xp"],
+[class*="XP"],
+[class*="toast"],
+[class*="notification"] {
+  animation: bw-slide-up 0.35s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+@keyframes bw-slide-up {
+  from { opacity: 0; transform: translateY(16px) scale(0.96); }
+  to   { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+/* Weekly streak dots */
+[class*="streak"],
+[class*="Streak"] {
+  transition: transform var(--bw-transition-spring) !important;
+}
+[class*="streak"]:hover,
+[class*="Streak"]:hover {
+  transform: scale(1.15) !important;
+}
+
+/* Nav link hover underline animation */
+nav a,
+[class*="nav-link"],
+[class*="navLink"] {
+  position: relative;
+  text-decoration: none;
+}
+nav a::after,
+[class*="nav-link"]::after,
+[class*="navLink"]::after {
+  content: "";
+  position: absolute;
+  bottom: -2px;
+  left: 50%;
+  right: 50%;
+  height: 2px;
+  background: currentColor;
+  border-radius: 1px;
+  opacity: 0.7;
+  transition:
+    left var(--bw-transition-base) ease,
+    right var(--bw-transition-base) ease;
+}
+nav a:hover::after,
+[class*="nav-link"]:hover::after,
+[class*="navLink"]:hover::after {
+  left: 0;
+  right: 0;
+}
