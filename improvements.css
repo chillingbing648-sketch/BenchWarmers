@@ -563,3 +563,38 @@ nav a:hover::after,
   left: 0;
   right: 0;
 }
+/* ============================================================
+   EMERGENCY MODAL FIX - OVERRIDE
+   ============================================================ */
+
+/* 1. Forces the Play Style menu to the absolute center of the screen */
+div:has(> h2:contains("CHANGE PLAY STYLE")), 
+.modal-overlay {
+    position: fixed !important;
+    inset: 0 !important; /* Shorthand for top/left/right/bottom 0 */
+    width: 100vw !important;
+    height: 100vh !important;
+    z-index: 9990 !important;
+    display: flex !important;
+    justify-content: center !important;
+    align-items: center !important;
+}
+
+/* 2. Forces the notification toasts to float ABOVE the blurred menu */
+[class*="toast"], 
+[class*="notification"],
+div:has(> text:contains("Badge:")) {
+    position: fixed !important;
+    bottom: 20px !important;
+    right: 20px !important;
+    z-index: 9999 !important; /* Higher than the modal */
+    pointer-events: none !important; /* Allows clicking through the invisible box */
+}
+
+/* 3. Re-enables clicking on the actual menu inside the blur */
+.modal-content,
+div:has(> h2:contains("CHANGE PLAY STYLE")) > div {
+    position: relative !important;
+    z-index: 9991 !important;
+    pointer-events: auto !important;
+}
