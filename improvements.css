@@ -598,3 +598,49 @@ div:has(> h2:contains("CHANGE PLAY STYLE")) > div {
     z-index: 9991 !important;
     pointer-events: auto !important;
 }
+/* ============================================================
+   SECTION 17. POP-UP & MODAL FIX (CENTERING & Z-INDEX)
+   ============================================================ */
+
+/* 1. Target the 'Change Play Style' container specifically */
+div:has(> h2), 
+[class*="modal"], 
+[class*="overlay"] {
+    position: fixed !important;
+    top: 50% !important;
+    left: 50% !important;
+    transform: translate(-50%, -50%) !important;
+    z-index: 10000 !important; /* Forces it above everything */
+    width: 90% !important;
+    max-width: 450px !important;
+    background: #111111 !important; /* Match your dark theme */
+    padding: 24px !important;
+    border: 1px solid rgba(255, 255, 255, 0.1) !important;
+    border-radius: 16px !important;
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.7) !important;
+}
+
+/* 2. Position the [✕] close buttons inside the pop-up */
+button[class*="close"], 
+span:has(> [✕]), 
+div > [✕] {
+    position: absolute !important;
+    top: 16px !important;
+    right: 16px !important;
+    z-index: 10001 !important;
+    cursor: pointer !important;
+    padding: 8px !important;
+}
+
+/* 3. Move 'XP Earned' and 'Badges' to the corner so they don't block the menu */
+[class*="toast"], 
+[class*="notification"], 
+div:has(> span:contains("XP earned")) {
+    position: fixed !important;
+    bottom: 24px !important;
+    right: 24px !important;
+    left: auto !important;
+    top: auto !important;
+    transform: none !important;
+    z-index: 10002 !important; /* Highest layer */
+}
