@@ -276,5 +276,22 @@
   <script src="improvements.js" defer></script> 
   <script defer src="/_vercel/insights/script.js"></script>
   <script defer src="/_vercel/speed-insights/script.js"></script>
+  <script>
+  window.addEventListener('keydown', function(event) {
+    if (event.key === 'Escape') {
+      // 1. Force the page to allow scrolling again
+      document.body.style.setProperty('overflow', 'auto', 'important');
+      
+      // 2. Hide any stuck overlays
+      const overlays = document.querySelectorAll('.modal-overlay, [class*="overlay"]');
+      overlays.forEach(overlay => {
+        overlay.style.setProperty('display', 'none', 'important');
+      });
+      
+      console.log("Benchwarmers UI: Screen forcibly unlocked by Escape key.");
+    }
+  });
+</script>
+</body>
 </body>
 </html>
